@@ -23,17 +23,14 @@ pipeline {
             }
         }
 
-        stage('Build & Tag Docker Image') {
+        stage('Build & Push') {
             steps {
                 sh "docker build -t ${ACR_NAME}/${IMAGE_NAME}:${IMAGE_TAG} ."
-            }
-        }
-
-        stage('Push Docker Image') {
-            steps {
                 sh "docker push ${ACR_NAME}/${IMAGE_NAME}:${IMAGE_TAG}"
             }
         }
+
+        
     }
 
     
