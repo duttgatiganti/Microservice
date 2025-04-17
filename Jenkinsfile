@@ -8,7 +8,7 @@ pipeline {
     }
 
     stages {
-        stage('Setup kubeconfig') {
+        stage('Setup kubeconfi') {
             steps {
                 sh '''
                 mkdir -p ~/.kube
