@@ -5,7 +5,7 @@ pipeline {
         ACR_NAME = 'acr3571.azurecr.io'
         IMAGE_NAME = 'currencyservice'
         DOCKER_CREDENTIALS_ID = 'DOCKER_CREDENTIALS_ID' // Jenkins credential ID for Docker login
-        IMAGE_TAG = '$BUILD_ID'
+        IMAGE_TAG = 'latest'
     }
 
     stages {
