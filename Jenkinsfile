@@ -1,13 +1,16 @@
 pipeline {       
     agent any
+
     environment {
         ACR_NAME = 'acr3571.azurecr.io'
         IMAGE_NAME = 'adservice'
-        DOCKER_CREDENTIALS_ID = 'acr-docker-creds'  // Jenkins credential ID for Docker login
-        AZURE_CREDENTIALS_ID = 'acr-azure-json'     // Jenkins credential ID for Azure JSON
+        DOCKER_CREDENTIALS_ID = 'acr-docker-creds' // Jenkins credential ID for Docker login
+        IMAGE_TAG = 'latest'
     }
 
     stages {
+        
+
         stage('Login to ACR') {
             steps {
                 withCredentials([usernamePassword(
@@ -19,25 +22,19 @@ pipeline {
                 }
             }
         }
-        stage('Build & Tag Docker Image2') {
+
+        stage('Build & Tag Docker Image') {
             steps {
-                script {
-                     
-                        sh "docker build -t acr3571.azurecr.io/adservice:latest ."
-                    
-                }
+                sh "docker build -t ${ACR_NAME}/${IMAGE_NAME}:${IMAGE_TAG} ."
             }
         }
-          
+
         stage('Push Docker Image') {
             steps {
-                script {
-withCredentials([usernamePassword(credentialsId: 'docker-cred', passwordVariable: 'ACR_PASSWORD', usernameVariable: 'ACR_USERNAME')])                    {
-                        
-                         sh "docker push acr3571.azurecr.io/adservice:latest "
-                    }
-                }
+                sh "docker push ${ACR_NAME}/${IMAGE_NAME}:${IMAGE_TAG}"
             }
         }
     }
+
+    
 }
