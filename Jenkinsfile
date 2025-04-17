@@ -39,7 +39,7 @@ EOF
             steps {
                 sh '''
                 echo "Applying deployment.yaml to AKS"
-                kubectl delete -f deployment-service.yml
+                kubectl apply -f deployment-service.yml
                 '''
             }
         }
