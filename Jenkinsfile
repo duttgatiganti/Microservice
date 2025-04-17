@@ -4,7 +4,7 @@ pipeline {
     environment {
         ACR_NAME = 'acr3571.azurecr.io'
         IMAGE_NAME = 'adservice'
-        DOCKER_CREDENTIALS_ID = 'acr-docker-creds' // Jenkins credential ID for Docker login
+        DOCKER_CREDENTIALS_ID = credientials(DOCKER_CREDENTIALS_ID) // Jenkins credential ID for Docker login
         IMAGE_TAG = 'latest'
     }
 
