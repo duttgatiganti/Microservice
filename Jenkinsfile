@@ -6,7 +6,7 @@ pipeline {
             steps {
                 script {
                      
-                        sh "docker build -t dutt1/adservice:latest ."
+                        sh "docker build -t acr3571.azurecr.io/adservice:latest ."
                     
                 }
             }
@@ -17,7 +17,7 @@ pipeline {
                 script {
 withCredentials([usernamePassword(credentialsId: 'docker-cred', passwordVariable: 'ACR_PASSWORD', usernameVariable: 'ACR_USERNAME')])                    {
                         
-                         sh "docker push dutt1/adservice:latest "
+                         sh "docker push acr3571.azurecr.io/adservice:latest "
                     }
                 }
             }
