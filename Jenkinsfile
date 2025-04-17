@@ -1,16 +1,15 @@
 pipeline {
     agent any
+
     environment {
         K8S_TOKEN = credentials('AKS_TOKEN')
-        K8S_API = credentials('AKS_API_SERVER')
-    }
-   
+        K8S_API   = credentials('AKS_API_SERVER')
     }
 
     stages {
-        stage('Setup kubeconfi') {
+        stage('Setup kubeconfig') {
             steps {
-                sh '''
+                sh """
                 mkdir -p ~/.kube
 
                 cat > ~/.kube/config <<EOF
@@ -32,7 +31,7 @@ users:
   user:
     token: "$K8S_TOKEN"
 EOF
-                '''
+                """
             }
         }
 
