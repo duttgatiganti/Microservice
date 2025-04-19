@@ -2,45 +2,33 @@ pipeline {
     agent any
 
     environment {
-        K8S_TOKEN = credentials('AKS_TOKEN')
-        K8S_API   = credentials('AKS_API_SERVER')
+        AZURE_SP_APP_ID  = credentials('AZURE_SP_APP_ID')
+        AZURE_SP_SECRET  = credentials('AZURE_SP_SECRET')
+        AZURE_TENANT_ID  = credentials('AZURE_TENANT_ID')
+        AKS_RG           = credentials('AKS_RG')
+        AKS_NAME         = credentials('AKS_NAME')
     }
 
     stages {
-        stage('Setup kubeconfig') {
+        stage('Login to Azure and Get AKS Credentials') {
             steps {
-                sh """
-                mkdir -p ~/.kube
+                sh '''
+                az login --service-principal \
+                  --username "$AZURE_SP_APP_ID" \
+                  --password "$AZURE_SP_SECRET" \
+                  --tenant "$AZURE_TENANT_ID"
 
-                cat > ~/.kube/config <<EOF
-apiVersion: v1
-kind: Config
-clusters:
-- cluster:
-    server: "$K8S_API"
-    insecure-skip-tls-verify: true
-  name: aks
-contexts:
-- context:
-    cluster: aks
-    user: jenkins
-  name: jenkins-context
-current-context: jenkins-context
-users:
-- name: jenkins
-  user:
-    token: "$K8S_TOKEN"
-EOF
-                """
+                az aks get-credentials \
+                  --resource-group "$AKS_RG" \
+                  --name "$AKS_NAME" \
+                  --overwrite-existing
+                '''
             }
         }
 
-        stage('Apply Deployment') {
+        stage('kubectl test') {
             steps {
-                sh '''
-                echo "Applying deployment.yaml to AKS"
-                kubectl apply -f deployment-service.yml
-                '''
+                sh 'kubectl get nodes'
             }
         }
     }
